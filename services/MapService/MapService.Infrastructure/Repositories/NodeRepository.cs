@@ -1,6 +1,6 @@
 ﻿namespace MapService.Infrastructure.Repositories
 {
-    internal class NodeRepository
+    public class NodeRepository
     {
     }
 }

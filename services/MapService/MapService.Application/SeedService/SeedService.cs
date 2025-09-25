@@ -3,6 +3,7 @@ using MapService.Domain.Models;
 using MapService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace MapService.Application.SeedService
@@ -27,7 +28,6 @@ namespace MapService.Application.SeedService
         /// <returns>True, if seeding was successful; false otherwise - any encountered error is logged</returns>
         public async Task<bool> SeedInitialDataAsync(string seedDataFile)
         {
-            await MigrateDatabaseAsync();
 
             var seedData = await LoadSeedDataAsync(seedDataFile);
 
@@ -67,13 +67,15 @@ namespace MapService.Application.SeedService
                 using StreamReader reader = new StreamReader(seedDataFile);
                 var rawData = await reader.ReadToEndAsync();
 
+                Console.WriteLine("Raw data: " + rawData);
                 if (string.IsNullOrEmpty(rawData))
                 {
                     _logger.LogWarning("[SeedService][LoadSeedData] Unable to read file {file}", seedDataFile);
                     return null;
                 }
 
-                var seedData = JsonSerializer.Deserialize<SeedData>(rawData);
+                var opts = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+                var seedData = JsonSerializer.Deserialize<SeedData>(rawData, opts);
 
                 if (seedData is null)
                 {
@@ -81,6 +83,10 @@ namespace MapService.Application.SeedService
                     return null;
                 }
 
+                Console.WriteLine(seedData.Nodes.Count);
+                Console.WriteLine(seedData.Edges.Count);
+                Console.WriteLine();
+                Console.WriteLine();
                 return seedData;
             }
             catch (ArgumentNullException ex) 
