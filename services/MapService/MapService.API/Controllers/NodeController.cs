@@ -1,17 +1,18 @@
-using MapService.Infrastructure.Repositories.Interfaces;
+﻿using MapService.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MapService.API.Controllers
 {
     [ApiController]
-    [Route("/api/map-service/maps")]
-    public class MapController
-        (ILogger<MapController> logger,
-        IMapRepository mapRepository) : ControllerBase
+    [Route("/api/map-service/nodes")]
+
+    public class NodeController
+        (ILogger<NodeController> logger,
+        INodeRepository mapRepository) : ControllerBase
     {
 
-        private readonly ILogger<MapController> _logger = logger;
-        private readonly IMapRepository _repository = mapRepository;
+        private readonly ILogger<NodeController> _logger = logger;
+        private readonly INodeRepository _repository = mapRepository;
 
         [HttpGet("health-check")]
         public IActionResult HealthCheck()
